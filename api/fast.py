@@ -3,10 +3,11 @@ from tensorflow.keras import models
 from tensorflow.python.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from pydantic import BaseModel
-from helpers import image_from_dict, image_to_dict
+from api.helpers import image_from_dict, image_to_dict, binarize_predictions, display_resized_prediction
 from road_detector.unet import GiveMeUnet
 app = FastAPI()
-LOCAL_Weights = '/Users/loulou/code/annabalaguy/API_road_detector/road_detector/WEIGHTS_Vincent_Jaccard_Crossentropy.h5'
+LOCAL_Weights = 'road-api/road_detector/WEIGHTS_Vincent_Jaccard_Crossentropy.h5'
+
 
 unet = GiveMeUnet()
 unet.load_weights(LOCAL_Weights)
@@ -38,11 +39,13 @@ async def prediction(item:Item):
 
     #Conversion du nparray en image str lisible pour l'API
     image_predite = image_to_dict(predict_img, dtype='float16')
+    pred_binary_img=binarize_predictions(image_predite)
+    pred_resized_img=display_resized_prediction(pred_binary_img)
 
     # TO DO: Option to convert tf to np -> prediction.numpy()
     # TO DO: Option to unscale *255 -> prediction * 255
 
-    return image_predite
+    return pred_resized_img
 
 
 @app.get("/test")
