@@ -1,7 +1,8 @@
 FROM python:3.8.6-buster
 
-COPY api / api
-COPY road_detector / road_detector
+COPY api /api
+COPY road_detector /road_detector
+COPY WEIGHTS_Vincent_Halfdata_Crossentropy.h5 /WEIGHTS_Vincent_Halfdata_Crossentropy.h5
 
 # NOM DU MODELE A CHANGER :ci dessus, copier dans l'environnement, le même Nom que le modèle enregistré sur GCP
 

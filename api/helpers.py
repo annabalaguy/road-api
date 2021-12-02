@@ -1,7 +1,6 @@
 import base64
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
 
 
 def image_to_dict(image_array, dtype='uint8', encoding='utf-8'):

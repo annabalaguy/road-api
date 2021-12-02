@@ -6,9 +6,8 @@ from pydantic import BaseModel
 from api.helpers import image_from_dict, image_to_dict, binarize_predictions, display_resized_prediction
 from road_detector.unet import GiveMeUnet
 app = FastAPI()
-LOCAL_Weights = 'road-api/road_detector/WEIGHTS_Vincent_Jaccard_Crossentropy.h5'
-
-
+LOCAL_Weights = 'WEIGHTS_Vincent_Halfdata_Crossentropy.h5'
+#/Users/loulou/code/annabalaguy/road-api/road_detector/WEIGHTS_Vincent_Jaccard_Crossentropy.h5
 unet = GiveMeUnet()
 unet.load_weights(LOCAL_Weights)
 
@@ -38,14 +37,17 @@ async def prediction(item:Item):
     predict_img=unet.predict(img)
 
     #Conversion du nparray en image str lisible pour l'API
+
+    #pred_binary_img=binarize_predictions(predict_img)
+    #pred_resized_img=display_resized_prediction(pred_binary_img)
+
     image_predite = image_to_dict(predict_img, dtype='float16')
-    pred_binary_img=binarize_predictions(image_predite)
-    pred_resized_img=display_resized_prediction(pred_binary_img)
+
 
     # TO DO: Option to convert tf to np -> prediction.numpy()
     # TO DO: Option to unscale *255 -> prediction * 255
 
-    return pred_resized_img
+    return image_predite
 
 
 @app.get("/test")

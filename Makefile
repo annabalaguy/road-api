@@ -1,3 +1,29 @@
+# Regions
+MULTI_REGION=eu.gcr.io
+REGION=europe-west1
+PROJECT_ID=wabon-bootcamp
+
+DOCKER_IMAGE_NAME=api-road
+BUILD_NAME = ${MULTI_REGION}/${PROJECT_ID}/${DOCKER_IMAGE_NAME}
+
+local_run_api:
+	uvicorn api.fast:app --reload --host localhost --port 8000
+
+dok_build_api:
+	docker build -t ${BUILD_NAME} . -f ./Dockerfile
+
+dok_run_api:
+	docker run -e PORT=8080 -p 8000:8080 ${BUILD_NAME}
+
+dok_push_gcp:
+	docker push ${BUILD_NAME}
+
+gcp_run_deploy:
+	gcloud run deploy --image ${BUILD_NAME} \
+                	  --platform managed \
+                	  --region ${REGION}
+
+
 # ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
@@ -46,4 +72,4 @@ count_lines:
 #         API COMMANDS
 # ----------------------------------
 run_api:
-	uvicorn DEMO.API.fast:app --reload
+	uvicorn api.fast:app --reload
